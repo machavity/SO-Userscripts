@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Mod User Box helper
-// @version      0.1
+// @version      0.2
 // @description  Add some clarity to the mod boxes for ban statuses. Adds a clear button for edit ban
 // @author       Machavity
 //
@@ -90,10 +90,17 @@
         span.classList.add(((banned) ? red : green));
         span.innerText = (banned ? 'Banned' : 'Not Banned');
         let eventSpan = div.querySelector('span[class="suggested-edit-ban"]');
-        div.appendChild(eventSpan);
-        div.querySelector('a').remove();
+        if(eventSpan) {
+            div.appendChild(eventSpan);
+            div.querySelector('a').remove();
+        } else { // Banned users will not have the ban link. Unban is in a different element
+            eventSpan = div.querySelector('a[class="suggested-edit-unban"]');
+            console.log(eventSpan);
+            eventSpan.nextSibling.remove();
+            eventSpan.previousSibling.remove();
+        }
         let button = document.createElement('button');
-        button.classList.add('s-btn', 's-btn__primary');
+        button.classList.add('s-btn', 's-btn__primary', 's-btn__xs');
         button.innerText = banned ? 'Remove Ban' : 'Add Ban';
         eventSpan.innerHTML = '';
         eventSpan.insertAdjacentElement('afterbegin', button);
