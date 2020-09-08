@@ -95,7 +95,6 @@
             div.querySelector('a').remove();
         } else { // Banned users will not have the ban link. Unban is in a different element
             eventSpan = div.querySelector('a[class="suggested-edit-unban"]');
-            console.log(eventSpan);
             eventSpan.nextSibling.remove();
             eventSpan.previousSibling.remove();
         }
