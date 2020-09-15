@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Mod User Box helper
-// @version      0.2
+// @version      0.2.1
 // @description  Add some clarity to the mod boxes for ban statuses. Adds a clear button for edit ban
 // @author       Machavity
 //
@@ -12,6 +12,11 @@
 // @include      https://*askubuntu.com/users*
 // @include      https://*mathoverflow.net/users*
 // @include      https://*.stackexchange.com/users*
+// @exclude      https://meta.stackoverflow.com/*
+// @exclude      https://meta.superuser.com/*
+// @exclude      https://meta.askubuntu.com/*
+// @exclude      https://meta.mathoverflow.net/*
+// @exclude      https://meta.*.stackexchange.com/*
 // ==/UserScript==
 
 (function() {
