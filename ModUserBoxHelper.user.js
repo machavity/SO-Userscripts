@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Mod User Box helper
-// @version      0.2.1
+// @version      0.3.0
 // @description  Add some clarity to the mod boxes for ban statuses. Adds a clear button for edit ban
 // @author       Machavity
 //
@@ -36,7 +36,6 @@
     function loadUserProfilePage() {
         let modCard = document.querySelector('div[class~="js-profile-mod-info"]');
         if(!modCard) return; // No mod block so we're done
-        modCard.classList.remove('d-none');
         let reputation = loadUserProfileReputation();
         let tds = document.querySelectorAll('td[class^="mod-label"]');
         tds.forEach(function(elm) {
@@ -61,6 +60,8 @@
     }
 
     function loadUserModPage() {
+        const annotate = 'supernovabg';
+        const flags = 'hotbg';
         let mod = document.getElementById('mod-content');
         let divs = mod.querySelectorAll('div[class="col-2"]');
         let nextDiv;
@@ -75,6 +76,27 @@
                 else editBanNotice(elm.nextElementSibling);
             }
         });
+        // style messages on the left side
+        let list = mod.querySelectorAll('span.bounty-indicator-tab');
+        if(list.length > 0) {
+            list[0].classList.add((list[0].nextElementSibling.innerText === 'flags for user' ? flags : annotate));
+            if(list.length > 1) list[1].classList.add(flags);
+        }
+
+        let cmElm = document.querySelector('a.coolbg');
+        if(!cmElm) return; // no CM messages so we don't need to add a link
+        let ul = document.querySelectorAll('ul.mod-quick-links li');
+        let flagLi = ul[4]; // grab the flag element
+        let newLi = document.createElement('li');
+        let span = document.createElement('span');
+        span.classList.add('bounty-indicator-tab', 'coolbg');
+        span.innerText = cmElm.innerText;
+        newLi.insertAdjacentElement('afterbegin', span);
+        let anchor = document.createElement('a');
+        anchor.href = cmElm.href;
+        anchor.innerText = ' Community Team message(s)';
+        newLi.insertAdjacentElement('beforeend', anchor);
+        flagLi.insertAdjacentElement('afterend', newLi);
     }
 
     function simpleBanNotice(elm, useText = null) {
