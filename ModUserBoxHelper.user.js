@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Mod User Box helper
-// @version      0.3.0
+// @version      0.3.1
 // @description  Add some clarity to the mod boxes for ban statuses. Adds a clear button for edit ban
 // @author       Machavity
 //
-// @updateURL    https://github.com/machavity/SO-Userscripts/raw/master/ModUserBoxHelper.js
-// @downloadURL  https://github.com/machavity/SO-Userscripts/raw/master/ModUserBoxHelper.js
+// @updateURL    https://github.com/machavity/SO-Userscripts/raw/master/ModUserBoxHelper.user.js
+// @downloadURL  https://github.com/machavity/SO-Userscripts/raw/master/ModUserBoxHelper.user.js
 // @include      https://*stackoverflow.com/users*
 // @include      https://*serverfault.com/users*
 // @include      https://*superuser.com/users*
