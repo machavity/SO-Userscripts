@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Mod User Box helper
-// @version      0.3.1
+// @version      0.3.2
 // @description  Add some clarity to the mod boxes for ban statuses. Adds a clear button for edit ban
 // @author       Machavity
 //
@@ -112,7 +112,7 @@
         else span.innerText = useText;
     }
     function editBanNotice(div) {
-        let banned = div.innerText.includes('yes');
+        let banned = !div.innerText.includes('no');
         let span = document.createElement('span');
         span.classList.add(((banned) ? red : green));
         span.innerText = (banned ? 'Banned' : 'Not Banned');
