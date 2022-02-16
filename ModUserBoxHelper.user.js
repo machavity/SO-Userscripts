@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Mod User Box helper
-// @version      0.3.2
+// @version      0.4
 // @description  Add some clarity to the mod boxes for ban statuses. Adds a clear button for edit ban
 // @author       Machavity
 //
@@ -25,6 +25,7 @@
     // SO classes for green and red. Pulled from the expanded up/down vote in Q&A CSS
     const green = 'fc-green-600';
     const red = 'fc-red-600';
+    const noEditBan = 'N/A';
     let reputation = '1';
 
     let url = window.location.href;
@@ -43,20 +44,34 @@
             if(elm.innerText.search(/blocked\sfrom\s(asking|answering)/i) !== -1) simpleBanNotice(elm.nextElementSibling);
             else if(elm.innerText.includes('suspended from reviews')) simpleBanNotice(elm.nextElementSibling);
             // Edit ban
-            else if(elm.innerText.includes('blocked from suggested edits') === true) {
-                if(reputation >= 2000) simpleBanNotice(elm.nextElementSibling, '>= 2k rep');
+            else if(elm.innerText.includes('suggested edits') === true) {
+                if(reputation >= 2000) simpleBanNotice(elm.nextElementSibling, noEditBan);
                 else editBanNotice(elm.nextElementSibling);
             }
         });
     }
     function loadUserProfileReputation() {
         // Profile Page
-        let div = document.querySelector('div[title="reputation"]');
-        if(div) return parseReputation(div.firstElementChild.firstElementChild.innerText);
+        let div = document.getElementById('top-cards');
+        if(div) {
+            let header = div.querySelector('h4');
+            if(header) return parseReputation(header.innerText);
+        }
         // Activity Page
-        div = document.querySelector('div[class~="fs-headline1"]');
-        if(div) return parseReputation(div.firstElementChild.innerText);
-        return 1;
+        div = document.getElementById('stats');
+        if(!div) return 1;
+        let list = div.querySelectorAll('.flex--item');
+        let rep;
+        Array.from(list).some(function(elm) {
+            if(elm.innerHTML.includes('reputation')) {
+                rep = elm.firstElementChild.innerText;
+                return true;
+            }
+            return false;
+        });
+
+        if(!rep) return 1;
+        return parseReputation(rep);
     }
 
     function loadUserModPage() {
@@ -72,7 +87,7 @@
             if(elm.innerText.search(/(Question\sban|Answer\sban|Review\ssuspension)/i) !== -1) simpleBanNotice(elm.nextElementSibling);
             // Edit ban
             if(elm.innerText.includes('Suggested edit ban') === true) {
-                if(reputation >= 2000) simpleBanNotice(elm.nextElementSibling, '>= 2k rep');
+                if(reputation >= 2000) simpleBanNotice(elm.nextElementSibling, noEditBan);
                 else editBanNotice(elm.nextElementSibling);
             }
         });
@@ -122,6 +137,7 @@
             div.querySelector('a').remove();
         } else { // Banned users will not have the ban link. Unban is in a different element
             eventSpan = div.querySelector('a[class="suggested-edit-unban"]');
+            if(!eventSpan) return; // Failsafe in case reputation check failed
             eventSpan.nextSibling.remove();
             eventSpan.previousSibling.remove();
         }
