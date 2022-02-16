@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Mod User Box helper
-// @version      0.4
+// @version      0.4.1
 // @description  Add some clarity to the mod boxes for ban statuses. Adds a clear button for edit ban
 // @author       Machavity
 //
@@ -86,7 +86,7 @@
             // Question, Answer and Review Ban
             if(elm.innerText.search(/(Question\sban|Answer\sban|Review\ssuspension)/i) !== -1) simpleBanNotice(elm.nextElementSibling);
             // Edit ban
-            if(elm.innerText.includes('Suggested edit ban') === true) {
+            if(elm.innerText.includes('suggesting edits') === true) {
                 if(reputation >= 2000) simpleBanNotice(elm.nextElementSibling, noEditBan);
                 else editBanNotice(elm.nextElementSibling);
             }
