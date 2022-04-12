@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Socky-lite
-// @version      0.0.1
+// @version      0.0.2
 // @description  Shows potential voting fraud accounts' PII side-by-side (simple parser to limp along without Rob's original Socky)
 // @author       Machavity
 //
@@ -60,7 +60,7 @@
         }
 
         loadSocky() {
-            let checkboxes = this.contentWindow.querySelectorAll('input[name="socky"');
+            let checkboxes = this.contentWindow.querySelectorAll('input[name="socky"]');
             let checked = [this.userList[0]];
             checkboxes.forEach(elm => { if(elm.checked) checked.push(elm.value) });
              if(checked.length <= 1) {
@@ -70,7 +70,7 @@
             this.table = document.createElement('table');
             this.table.style.marginTop = '10px';
             this.table.classList.add('s-table');
-            this.table.insertAdjacentHTML('afterbegin', '<thead><tr><th>User</th><th>Rep</th><th>Joined</th><th>Real Name/Email</th><th>Last IP</th></tr></thead>');
+            this.table.innerHTML = '<thead><tr><th>User</th><th>Rep</th><th>Joined</th><th>Real Name/Email</th><th>Last IP</th></tr></thead>';
             this.fetchUsers(checked);
 
 
@@ -79,32 +79,33 @@
 
         fetchUsers(checked_users) {
             let url_list = '';
+            let api_site = window.location.hostname.replace(/(\.stackexchange)?\.com$/, '');
             checked_users.forEach(user => { url_list = url_list + user + ';'; });
-            fetch(SE_API + 'users/' + url_list.slice(0,-1) + '?order=desc&sort=reputation&site=stackoverflow').then(response => response.json())
+            fetch(SE_API + 'users/' + url_list.slice(0,-1) + '?order=desc&sort=reputation&site=' + api_site).then(response => response.json())
             .then(users => {
                 users.items.forEach(user => {
                     let date = new Date(user.creation_date * 1000);
                     let display_date = date.toString();
-                    let html = '<tr id="socky_' + user.user_id + '"><td><a href="' + user.link + '" target="_new">' + user.display_name + '</a></td>' +
+                    let html = '<tr id="socky_' + user.user_id + '"><td><a href="/users/account-info/' + user.user_id + '" target="_new">' + user.display_name + '</a></td>' +
                         '<td>' + user.reputation + '</td>' +
                         '<td>' + display_date + '</td>' +
                         '<td></td><td><button type="button" class="s-btn s-btn__primary s-btn__xs" id="sockybtn_' + user.user_id + '">Load PII</button></td></tr>';
                     this.table.insertAdjacentHTML('beforeend', html);
                     document.getElementById('sockybtn_' + user.user_id).addEventListener('click', evt => { this.fetchPII(evt, user.user_id); });
                 });
-            });
+            })
+            .catch(error => alert('An error has occurred in fetching users: ' + error));
 
         }
 
         fetchPII(evt, userID) {
-            let button = evt.target;
             let form = new FormData();
             form.append('fkey', this.fkey)
             form.append('id', userID);
 
             fetch('/admin/all-pii', {method: 'POST', body: form}).then(response => response.text())
-            .then(html => this.parsePII(html, button))
-                .catch(error => {'An error has occurred in fetching PII: ' + error});
+            .then(html => this.parsePII(html, evt.target))
+                .catch(error => alert('An error has occurred in fetching PII: ' + error));
         }
 
         parsePII(html, button) {
@@ -113,7 +114,7 @@
             let rows = dom.querySelectorAll('div.row');
             let pii = rows[0].querySelectorAll('a');
             let td = button.closest('td');
-            td.previousElementSibling.innerHTML = '<b>Real Name:</b> ' + pii[0].innerText + '<br><b>Email:</b> ' + pii[1].innerText;
+            td.previousElementSibling.innerHTML = '<b>Real Name:</b> ' + pii[1].innerText + '<br><b>Email:</b> ' + pii[0].innerText;
             let ip = rows[1].querySelector('span');
             td.innerHTML = ip.innerText;
         }
