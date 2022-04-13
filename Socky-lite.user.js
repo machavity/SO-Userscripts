@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Socky-lite
-// @version      0.0.2
+// @version      0.0.3
 // @description  Shows potential voting fraud accounts' PII side-by-side (simple parser to limp along without Rob's original Socky)
 // @author       Machavity
 //
@@ -83,6 +83,7 @@
             checked_users.forEach(user => { url_list = url_list + user + ';'; });
             fetch(SE_API + 'users/' + url_list.slice(0,-1) + '?order=desc&sort=reputation&site=' + api_site).then(response => response.json())
             .then(users => {
+                if(users.items === undefined) throw 'Failed to fetch user information';
                 users.items.forEach(user => {
                     let date = new Date(user.creation_date * 1000);
                     let display_date = date.toString();
