@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Socky-lite
-// @version      0.1.0
+// @version      0.1.1
 // @description  Shows potential voting fraud accounts' PII side-by-side (simple parser to limp along without Rob's original Socky)
 // @author       Machavity
 //
@@ -70,6 +70,7 @@
                  return;
              }
             this.table = document.createElement('table');
+            this.table.id = 'socky-lite';
             this.table.style.marginTop = '10px';
             this.table.classList.add('s-table');
             this.table.innerHTML = '<thead><tr><th>User</th><th>Rep</th><th>Joined</th><th>Real Name/Email</th><th>Last IP</th></tr></thead>';
@@ -77,6 +78,7 @@
 
 
             this.contentWindow.append(this.table);
+            this.table.scrollIntoView();
         }
 
         fetchUsers(checked_users) {
