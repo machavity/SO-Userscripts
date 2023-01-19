@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         New Mod Users Page
-// @version      0.0.1
+// @version      0.0.2
 // @description  Splits the clunky /admin/users page into different components for easier work
 // @author       Machavity
 //
@@ -37,6 +37,7 @@
         constructor() {
             this.page = 'modmessage';
             let url = location.href;
+            if(url.indexOf('show-user-votes') !== -1) return;
             if(url.indexOf(new_page_url) !== -1) {
                 if(window.location.hash !== new_page_hash) {
                     this.drawUserLink();
@@ -61,7 +62,7 @@
         drawModUserPage() {
             document.title = 'New Mod Users Page';
             let container = document.querySelector('div.content-page');
-            container.innerHTML = '<style>#newModUserNav button { margin: 0 5px; } .myUserActions { background-color: #fcad03; }</style>';
+            container.innerHTML = '<style>#newModUserNav button { margin: 0 5px; } .myUserActions { background-color: rgb(225, 236, 244); }</style>';
             this.nav_div = document.createElement('div');
             this.nav_div.id = 'newModUserNav';
             this.nav_div.style.margin = '25px 24px 20px';
@@ -125,5 +126,4 @@
     }
 
     let new_mod_users = new NewModUsers();
-    // Your code here...
 })();
