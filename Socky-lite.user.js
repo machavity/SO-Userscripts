@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Socky-lite
-// @version      0.1.1
+// @version      0.1.2
 // @description  Shows potential voting fraud accounts' PII side-by-side (simple parser to limp along without Rob's original Socky)
 // @author       Machavity
 //
@@ -35,7 +35,7 @@
              let button = document.createElement('button');
              button.type = 'button';
              button.innerText = 'Use Socky';
-             button.classList.add('s-btn', 's-btn__primary', 's-btn__xs');
+             button.classList.add('s-btn', 's-btn__filled');
              button.addEventListener('click', () => this.loadSocky());
              button.style.marginLeft = '4px';
              subheader[0].insertAdjacentElement('beforeend', button);
@@ -94,7 +94,7 @@
                     let html = '<tr id="socky_' + user.user_id + '"><td><a href="/users/account-info/' + user.user_id + '" target="_new">' + user.display_name + '</a></td>' +
                         '<td>' + user.reputation + '</td>' +
                         '<td>' + display_date + '</td>' +
-                        '<td></td><td><button type="button" class="s-btn s-btn__primary s-btn__xs" id="sockybtn_' + user.user_id + '">Load PII</button></td></tr>';
+                        '<td></td><td><button type="button" class="s-btn s-btn__filled" id="sockybtn_' + user.user_id + '">Load PII</button></td></tr>';
                     this.table.insertAdjacentHTML('beforeend', html);
                     document.getElementById('sockybtn_' + user.user_id).addEventListener('click', evt => { this.fetchPII(evt, user.user_id); });
                 });
