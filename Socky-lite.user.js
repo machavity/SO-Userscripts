@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Socky-lite
-// @version      0.1.2
+// @version      0.1.3
 // @description  Shows potential voting fraud accounts' PII side-by-side (simple parser to limp along without Rob's original Socky)
 // @author       Machavity
 //
@@ -85,7 +85,8 @@
             let url_list = '';
             let api_site = window.location.hostname.replace(/(\.stackexchange)?\.com$/, '');
             checked_users.forEach(user => { url_list = url_list + user + ';'; });
-            fetch(SE_API + 'users/' + url_list.slice(0,-1) + '?order=desc&sort=reputation&site=' + api_site + '&key=' + API_KEY).then(response => response.json())
+            fetch(SE_API + 'users/' + url_list.slice(0,-1) + '?order=desc&sort=reputation&site=' + api_site, {	headers: {'Authorization': 'Bearer ' + API_KEY} })
+                .then(response => response.json())
             .then(users => {
                 if(users.items === undefined) throw 'Failed to fetch user information';
                 users.items.forEach(user => {
